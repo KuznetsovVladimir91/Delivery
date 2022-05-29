@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.*;
 import static com.codeborne.selenide.Selenide.*;
@@ -28,13 +29,13 @@ public class CardDeliveryOrderTest {
         open("http://localhost:9999");
         $("[placeholder=Город]").setValue("Казань");
         $("[data-test-id=date] input").doubleClick().sendKeys(Keys.DELETE);
-        String meetingDate = LocalDate.now().plusDays(5).format(DateTimeFormatter.ofPattern("dd,MM,yyyy"));
+        String meetingDate = LocalDate.now().plusDays(5).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         $("[data-test-id=date] input").setValue(meetingDate);
         $("[data-test-id=name] input").setValue("Иван Петров");
         $("[data-test-id=phone] input").setValue("+79531453278");
         $("[data-test-id=agreement]").click();
         $(byText("Забронировать")).click();
-        $("[data-test-id=notification]").should(visible, Duration.ofSeconds(15));
+        $("[data-test-id=notification]").shouldHave(text("Успешно! Встреча успешно забронирована на " + meetingDate), Duration.ofSeconds(15));
 
     }
 
